@@ -1,20 +1,20 @@
 const store = {
   items: [
-    { id: cuid(), name: 'apples', checked: false },
-    { id: cuid(), name: 'oranges', checked: false },
-    { id: cuid(), name: 'milk', checked: true },
-    { id: cuid(), name: 'bread', checked: false }
+    { id: cuid(), name: 'apples', itemNumber: 1, checked: false },
+    { id: cuid(), name: 'oranges', itemNumber: 2, checked: false },
+    { id: cuid(), name: 'milk', itemNumber: 3, checked: true },
+    { id: cuid(), name: 'bread', itemNumber: 4, checked: false }
   ],
   hideCheckedItems: false
 };
 
 const generateItemElement = function (item) {
-  let itemTitle = `<span class='shopping-item shopping-item__checked'>${item.name}</span>`;
+  let itemTitle = `<form><input id='list-item${item.itemNumber}' type='text' value="${item.name}" class='shopping-item shopping-item__checked'></form>`;
   if (!item.checked) {
-    itemTitle = `
-     <span class='shopping-item'>${item.name}</span>
-    `;
+    itemTitle = `<form><input id='list-item${item.itemNumber}' type='text' value="${item.name}" class='shopping-item'></form>`;
   }
+
+  // item.itemNumber += 1;
 
   return `
     <li class='js-item-element' data-item-id='${item.id}'>
@@ -63,7 +63,8 @@ const render = function () {
 };
 
 const addItemToShoppingList = function (itemName) {
-  store.items.push({ id: cuid(), name: itemName, checked: false });
+  let itemNum = store.items.length + 1;
+  store.items.push({ id: cuid(), name: itemName, itemNumber: itemNum, checked: false });
 };
 
 const handleNewItemSubmit = function () {
@@ -94,6 +95,49 @@ const getItemIdFromElement = function (item) {
     .closest('.js-item-element')
     .data('item-id');
 };
+
+// TESTS
+
+// const findItem = function() {
+//   $('.js-shopping-list').on('click', '.shopping-item', event => {
+//     const id = getItemIdFromElement(event.currentTarget);
+//     const foundItem = store.items.find(item => item.id === id);
+//     return foundItem.value();
+//   });
+// };
+
+// $('.js-shopping-item').on('click', '.shopping-item', event => {
+//   console.log(event.currentTarget);
+// });
+
+// const editItemName = function() {
+//   $('.js-shopping-list').on('input', '.shopping-item', event => {
+    
+//     return event.currentTarget.value();
+//   });
+// };
+
+// test - closer
+
+const itemName = function (event) {
+  // const id = getItemIdFromElement(event.target);
+  // const index = store.items.findIndex(item => item.id === id);
+  $('.js-shopping-list').on('input', '.shopping-item', event =>
+  // { store.items[index].name = event.target.value;
+  { console.log(event.target.value);
+    return event.target.value;
+  });
+};
+
+itemName();
+
+
+
+// function updateValue(e) {
+//   console.log(e.target.value);
+// }
+
+
 
 /**
  * Responsible for deleting a list item.
@@ -160,6 +204,7 @@ const handleShoppingList = function () {
   handleItemCheckClicked();
   handleDeleteItemClicked();
   handleToggleFilterClick();
+  // itemName();
 };
 
 // when the page loads, call `handleShoppingList`
